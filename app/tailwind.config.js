@@ -55,9 +55,9 @@ module.exports = {
           dark: "#08162B",
         },
         aqua: {
-          DEFAULT: "#00D9C0",
-          light: "#33E1CC",
-          dark: "#00B8A3",
+          DEFAULT: "#38BDF8",
+          light: "#7DD3FC",
+          dark: "#0284C7",
         },
         coral: {
           DEFAULT: "#F4A261",
