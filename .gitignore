@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Production
+dist/
+build/
+**/dist/
+**/build/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System
+.DS_Store
+Thumbs.db
+
+# Misc
+*.tar.gz
+zioyZFH6
+ziLHQGcZ
