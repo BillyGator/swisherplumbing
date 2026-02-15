@@ -129,7 +129,7 @@ const HeroSection = () => {
         >
           <img
             src="/images/logo-with-mascot.png"
-            alt="Swisher Plumbing Pelican Mascot"
+            alt="Swisher Plumbing Pelican Mascot - Trusted Plumber in Pace & Milton, FL"
             className="h-[25vh] md:h-[35vh] lg:h-[40vh] w-auto object-contain animate-float hover:scale-110 hover:rotate-3 transition-transform duration-500 cursor-pointer drop-shadow-2xl"
           />
         </div>

@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Facebook, Instagram, ArrowUp } from 'lucide-react';
+import { Phone, MapPin, Facebook, Instagram, ArrowUp } from 'lucide-react';
 
 const quickLinks = [
   { name: 'Home', href: '#home' },
@@ -60,7 +60,7 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <img
               src="/images/logo-with-mascot.png"
-              alt="Swisher Plumbing"
+              alt="Swisher Plumbing Logo - Pace & Milton, FL"
               className="h-20 w-auto object-contain mb-4"
             />
             <p className="text-white/60 mb-6">
@@ -130,15 +130,7 @@ const Footer = () => {
                   (850) 619-8613
                 </a>
               </li>
-              <li>
-                <a
-                  href="mailto:swisherplumbingfl@gmail.com"
-                  className="flex items-center gap-3 text-white/60 hover:text-aqua transition-colors"
-                >
-                  <Mail className="w-5 h-5 text-aqua" />
-                  swisherplumbingfl@gmail.com
-                </a>
-              </li>
+
               <li className="flex items-start gap-3 text-white/60">
                 <MapPin className="w-5 h-5 text-aqua flex-shrink-0 mt-0.5" />
                 <span>Pace, FL 32571<br />Serving the Florida Panhandle</span>

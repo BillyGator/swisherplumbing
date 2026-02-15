@@ -49,7 +49,7 @@ const Navigation = () => {
             >
               <img
                 src="/images/logo-with-mascot.png"
-                alt="Swisher Plumbing"
+                alt="Swisher Plumbing Logo"
                 className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </a>

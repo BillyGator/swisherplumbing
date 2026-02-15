@@ -117,7 +117,7 @@ const ServicesSection = () => {
                 <div className="absolute inset-0 bg-aqua/20 rounded-full blur-xl animate-pulse-slow"></div>
                 <img
                   src="/images/PelicanMascot.png"
-                  alt="Swisher Pelican"
+                  alt="Swisher Plumbing Pelican Mascot - Friendly Service in Pensacola, FL"
                   className="relative w-full h-full object-contain animate-float"
                 />
               </div>
@@ -208,7 +208,7 @@ const ServicesSection = () => {
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/5]">
                     <img
                       src={activeService !== null ? services[activeService].image : "/images/Pelican-Services-Pic-1200.jpg"}
-                      alt={activeService !== null ? services[activeService].title : "Swisher Plumbing Services Collage"}
+                      alt={activeService !== null ? `${services[activeService].title} Service in Milton & Pace, FL` : "Swisher Plumbing Services Collage - Plumbing Solutions in Florida Panhandle"}
                       className="w-full h-full object-contain transition-all duration-700 transform hover:scale-105"
                       key={activeService ?? 'default'} // Force re-render for animation
                     />

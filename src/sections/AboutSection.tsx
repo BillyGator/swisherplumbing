@@ -70,7 +70,7 @@ const AboutSection = () => {
       <div className="absolute inset-0 w-full h-full">
         <img
           src="/images/SectionBackground.png"
-          alt="Background"
+          alt="Swisher Plumbing Service Area Background"
           className="w-full h-full object-cover opacity-90"
         />
         {/* Subtle overlay for text readability */}

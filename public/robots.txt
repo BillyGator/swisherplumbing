@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://swisherplumbing.com/sitemap.xml
