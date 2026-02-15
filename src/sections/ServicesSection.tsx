@@ -145,15 +145,14 @@ const ServicesSection = () => {
                   className={`group cursor-pointer p-5 rounded-2xl border transition-all duration-300 transform hover:-translate-x-1 ${activeService === index
                     ? 'bg-navy-light border-aqua/50 shadow-lg shadow-gray-900/20'
                     : 'bg-navy-light/50 border-white/5 hover:border-white/20 hover:bg-navy-light'
-                    }`}
-                >
-                  <div className="flex items-center group-hover:items-start gap-4 transition-all duration-300">
-                    <div className={`p-3 rounded-xl transition-colors duration-300 ${activeService === index ? 'bg-aqua text-navy' : 'bg-white/5 text-aqua group-hover:bg-white/10'
+                    }`}>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center group-hover:items-start gap-4 transition-all duration-300">
+                    <div className={`p-3 rounded-xl transition-colors duration-300 flex-shrink-0 ${activeService === index ? 'bg-aqua text-navy' : 'bg-white/5 text-aqua group-hover:bg-white/10'
                       }`}>
                       {service.icon}
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-3xl group-hover:text-xl font-coda font-bold text-white mb-1 group-hover:text-aqua transition-all duration-300">
+                    <div className="flex-1 w-full min-w-0">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl group-hover:text-xl font-coda font-bold text-white mb-1 group-hover:text-aqua transition-all duration-300 truncate group-hover:whitespace-normal">
                         {service.title}
                       </h3>
 
@@ -167,7 +166,7 @@ const ServicesSection = () => {
                             {service.features.map((feature) => (
                               <span
                                 key={feature}
-                                className="inline-flex items-center gap-1 text-xs bg-sand/10 text-sand px-3 py-1 rounded-full border border-sand/20"
+                                className="inline-flex items-center gap-1 text-xs bg-sand/10 text-sand px-2 py-1 rounded-full border border-sand/20 whitespace-nowrap"
                               >
                                 <CheckCircle2 className="w-3 h-3" />
                                 {feature}
@@ -177,7 +176,7 @@ const ServicesSection = () => {
                         </div>
                       </div>
                     </div>
-                    <ArrowRight className={`w-5 h-5 transition-all duration-300 ${activeService === index
+                    <ArrowRight className={`hidden sm:block w-5 h-5 transition-all duration-300 ${activeService === index
                       ? 'text-aqua translate-x-1 opacity-100'
                       : 'text-white/30 group-hover:text-white/60 opacity-0 group-hover:opacity-100'
                       }`} />
@@ -236,7 +235,7 @@ const ServicesSection = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

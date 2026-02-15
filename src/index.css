@@ -47,12 +47,21 @@
   }
   
   body {
-    @apply bg-navy text-white font-inter antialiased;
+    @apply bg-navy text-white font-inter antialiased overflow-x-hidden;
     background-color: #0B1F3F;
+    /* Prevent pull-to-refresh on mobile which can look weird with custom backgrounds */
+    overscroll-behavior-y: none;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-coda font-extrabold tracking-tight;
+  }
+
+  /* Prevent iOS zoom on focus for inputs */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
   }
 }
 

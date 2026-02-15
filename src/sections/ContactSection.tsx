@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Phone,
-  Mail,
   MapPin,
   Clock,
   Send,
@@ -14,9 +13,6 @@ import { Textarea } from '@/components/ui/textarea';
 import RevealOnScroll from '../components/RevealOnScroll';
 
 // Obfuscate email to prevent simple scraping
-const USER = 'swisherplumbingfl';
-const DOMAIN = 'gmail.com';
-const CONTACT_EMAIL = `${USER}@${DOMAIN}`;
 // FormSubmit.co ID for secure submission without exposing email in network requests
 const FORMSUBMIT_ID = '130c27e5fcdd9462a03f1b42c90e7de2';
 
@@ -27,13 +23,6 @@ const contactInfo = [
     content: '(850) 619-8613',
     href: 'tel:850-619-8613',
     description: 'Call us anytime!',
-  },
-  {
-    icon: <Mail className="w-6 h-6" />,
-    title: 'Email',
-    content: CONTACT_EMAIL,
-    href: `mailto:${CONTACT_EMAIL}`,
-    description: 'We reply within 24 hours',
   },
   {
     icon: <MapPin className="w-6 h-6" />,
