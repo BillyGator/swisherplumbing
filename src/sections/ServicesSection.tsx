@@ -52,7 +52,7 @@ const services: Service[] = [
     icon: <Wrench className="w-8 h-8" />,
     title: 'Sewer Line Service',
     description: 'Complete sewer line inspection, repair, and replacement.',
-    features: ['Video inspection', 'Line repair', 'Trenchless options'],
+    features: ['Video inspection', 'Line repair', 'Grinder Pumps'],
     image: '/images/pelican-sewer.png',
   },
   {
