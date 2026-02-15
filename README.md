@@ -71,3 +71,15 @@ export default defineConfig([
   },
 ])
 ```
+
+## Deployment
+
+**IMPORTANT:** The live website is served from the `/dist` directory. 
+Any changes made to the `src/` code must be built into `/dist` before pushing to GitHub.
+
+**Deployment Steps:**
+1. Make changes in `src/`.
+2. Run `npm run build` to update the `/dist` folder.
+3. Commit and push: `git add . && git commit -m "Deploy" && git push`
+
+See detailed instructions in `.agent/workflows/DEPLOYMENT.md`.
