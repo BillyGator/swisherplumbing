@@ -14,7 +14,7 @@ import RevealOnScroll from '../components/RevealOnScroll';
 const stats = [
   { number: '23+', label: 'Years Experience', icon: <Award className="w-6 h-6" /> },
   { number: '10K+', label: 'Happy Customers', icon: <Users className="w-6 h-6" /> },
-  { number: '24/7', label: 'Emergency Service', icon: <Clock className="w-6 h-6" /> },
+  { number: 'Fast', label: 'Emergency Service', icon: <Clock className="w-6 h-6" /> },
   { number: '100%', label: 'Satisfaction Guarantee', icon: <ThumbsUp className="w-6 h-6" /> },
 ];
 

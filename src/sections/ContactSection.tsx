@@ -34,9 +34,9 @@ const contactInfo = [
   {
     icon: <Clock className="w-6 h-6" />,
     title: 'Hours',
-    content: 'Mon-Fri: 7am-6pm',
+    content: 'Mon-Fri: 7am-7pm',
     href: '#',
-    description: 'Sat: 8am-4pm | 24/7 Emergency',
+    description: 'Sat: 8am-12pm | Sun: Closed',
   },
 ];
 
@@ -185,12 +185,13 @@ const ContactSection = () => {
                     <Phone className="w-7 h-7 text-white animate-pulse" />
                   </div>
                   <div>
-                    <p className="text-white font-coda font-bold text-xl">24/7 Emergency Service</p>
+                    <p className="text-white font-coda font-bold text-xl">Emergency Service</p>
                     <p className="text-white/90 text-sm font-medium">Plumbing emergency? Call now!</p>
                   </div>
                 </div>
               </div>
             </RevealOnScroll>
+
           </div>
 
           {/* Contact Form - Right Side */}

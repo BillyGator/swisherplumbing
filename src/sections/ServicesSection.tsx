@@ -58,8 +58,8 @@ const services: Service[] = [
   {
     icon: <AlertCircle className="w-8 h-8" />,
     title: 'Emergency Calls',
-    description: '24/7 emergency plumbing service when you need it most.',
-    features: ['24/7 availability', 'Fast response', 'Expert solutions'],
+    description: 'Emergency plumbing service when you need it most.',
+    features: ['Fast response', 'Expert solutions', 'Reliable repairs'],
     image: '/images/pelican-emergency-final.png',
   },
 ];
@@ -226,7 +226,7 @@ const ServicesSection = () => {
 
                 <div className="absolute -top-6 -left-6 z-20 pointer-events-none">
                   <div className="bg-gradient-to-br from-sand to-sand-dark text-navy p-5 rounded-2xl shadow-2xl shadow-gray-900/50 animate-float-delayed">
-                    <p className="text-3xl font-coda font-bold">24/7</p>
+                    <p className="text-3xl font-coda font-bold">Fast</p>
                     <p className="text-sm font-medium font-inter">Emergency Service</p>
                   </div>
                 </div>
