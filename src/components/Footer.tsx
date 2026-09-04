@@ -1,29 +1,18 @@
 import { Phone, MapPin, ArrowUp } from 'lucide-react';
-import { prefersReducedMotion, scrollToSelector } from '../lib/motion';
+import { prefersReducedMotion } from '../lib/motion';
+import { SERVICES, serviceUrl } from '../content/services';
+import { PHONE_DISPLAY, PHONE_TEL } from '../site';
 
 const quickLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'Services', href: '#services' },
-  { name: 'About Us', href: '#about' },
-  { name: 'Contact', href: '#contact' },
-];
-
-const services = [
-  'Leak Detection',
-  'Drain Cleaning',
-  'Water Heaters',
-  'Fixture Installation',
-  'Sewer Service',
-  'Emergency Repairs',
+  { name: 'Home', href: '/' },
+  { name: 'Plumbing Services', href: '/plumbing-services/' },
+  { name: 'About', href: '/#about' },
+  { name: 'Contact', href: '/contact/' },
 ];
 
 const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-  };
-
-  const scrollToSection = (href: string) => {
-    scrollToSelector(href);
   };
 
   return (
@@ -82,16 +71,12 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-coda font-bold text-lg mb-4">Quick Links</h4>
+            <h2 className="text-white font-coda font-bold text-lg mb-4">Quick Links</h2>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(link.href);
-                    }}
                     className="text-white/60 hover:text-aqua transition-colors duration-300"
                   >
                     {link.name}
@@ -103,11 +88,16 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="text-white font-coda font-bold text-lg mb-4">Our Services</h4>
+            <h2 className="text-white font-coda font-bold text-lg mb-4">Our Services</h2>
             <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service}>
-                  <span className="text-white/60">{service}</span>
+              {SERVICES.map((service) => (
+                <li key={service.slug}>
+                  <a
+                    href={serviceUrl(service.slug)}
+                    className="text-white/60 hover:text-aqua transition-colors duration-300"
+                  >
+                    {service.name}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -115,15 +105,15 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-white font-coda font-bold text-lg mb-4">Contact Us</h4>
+            <h2 className="text-white font-coda font-bold text-lg mb-4">Contact Us</h2>
             <ul className="space-y-4">
               <li>
                 <a
-                  href="tel:850-619-8613"
+                  href={PHONE_TEL}
                   className="flex items-center gap-3 text-white/60 hover:text-aqua transition-colors"
                 >
                   <Phone className="w-5 h-5 text-aqua" />
-                  (850) 619-8613
+                  {PHONE_DISPLAY}
                 </a>
               </li>
 

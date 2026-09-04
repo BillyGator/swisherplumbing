@@ -8,17 +8,21 @@ counts, licensing status, or social media profiles: none of those are stated her
 they are not yet verified. Where this file is silent, treat the information as unknown
 rather than assumed.
 
-## Services listed on the website
+## Services
 
-- Leak detection and repair
-- Drain cleaning
-- Water heater services
-- Fixture upgrades
-- Sewer line service
-- Grinder pumps
-- Emergency calls (availability hours are not published; call to confirm)
+Each service page explains the warning signs, why professional diagnosis matters, and
+what the work can involve. None of the pages promise response times, prices, or outcomes.
 
-## Primary pages
+- [Leak detection and repair](https://swisherplumbingllc.com/plumbing-services/leak-detection-repair/)
+- [Drain cleaning](https://swisherplumbingllc.com/plumbing-services/drain-cleaning/)
+- [Water heater services](https://swisherplumbingllc.com/plumbing-services/water-heater-services/)
+- [Fixture upgrades](https://swisherplumbingllc.com/plumbing-services/fixture-upgrades/)
+- [Sewer line service](https://swisherplumbingllc.com/plumbing-services/sewer-line-service/)
+- [Grinder pumps](https://swisherplumbingllc.com/plumbing-services/grinder-pumps/)
+- Emergency calls (listed on the site; availability hours are not published — call to confirm)
+
+## Pages
 
 - [Home](https://swisherplumbingllc.com/): Business overview, services, and contact information.
-- [Contact](https://swisherplumbingllc.com/#contact): Phone number and service request form.
+- [Plumbing services](https://swisherplumbingllc.com/plumbing-services/): Index of all services listed above.
+- [Contact](https://swisherplumbingllc.com/contact/): Phone number and service request form.

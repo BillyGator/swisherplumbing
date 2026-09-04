@@ -1,8 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
 import { scrollToSelector } from '../lib/motion';
+import { PHONE_DISPLAY, PHONE_TEL } from '../site';
 
-const Navigation = () => {
+interface NavLink {
+  name: string;
+  /** Real crawlable URL. Hash-only hrefs scroll when already on the homepage. */
+  href: string;
+  /** True when the link targets a homepage section. */
+  isHomeSection?: boolean;
+}
+
+const navLinks: NavLink[] = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/plumbing-services/' },
+  { name: 'About', href: '/#about', isHomeSection: true },
+  { name: 'Contact', href: '/contact/' },
+];
+
+const Navigation = ({ currentPath }: { currentPath: string }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -14,16 +30,19 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Services', href: '#services' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
-  const scrollToSection = (href: string) => {
-    scrollToSelector(href);
+  /**
+   * Homepage-section links (currently only About, which has no standalone
+   * page) scroll smoothly when the visitor is already on the homepage.
+   * Everywhere else they are ordinary full navigations to `/#section`.
+   */
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: NavLink) => {
     setIsMobileMenuOpen(false);
+    if (link.isHomeSection && currentPath === '/') {
+      const hash = link.href.slice(link.href.indexOf('#'));
+      if (scrollToSelector(hash)) {
+        e.preventDefault();
+      }
+    }
   };
 
   return (
@@ -38,10 +57,12 @@ const Navigation = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <a
-              href="#home"
+              href="/"
               onClick={(e) => {
-                e.preventDefault();
-                scrollToSection('#home');
+                if (currentPath === '/') {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0 });
+                }
               }}
               className="flex items-center gap-3 group"
             >
@@ -61,10 +82,7 @@ const Navigation = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(link.href);
-                  }}
+                  onClick={(e) => handleNavClick(e, link)}
                   className="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300 font-medium"
                 >
                   {link.name}
@@ -75,18 +93,15 @@ const Navigation = () => {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center gap-4">
               <a
-                href="tel:850-619-8613"
+                href={PHONE_TEL}
                 className="flex items-center gap-2 text-white/80 hover:text-aqua transition-colors duration-300"
               >
                 <Phone className="w-4 h-4" />
-                <span className="font-medium">(850) 619-8613</span>
+                <span className="font-medium">{PHONE_DISPLAY}</span>
               </a>
-              <button
-                onClick={() => scrollToSection('#contact')}
-                className="btn-primary text-sm"
-              >
-                Book Online
-              </button>
+              <a href="/contact/" className="btn-primary text-sm">
+                Request Service
+              </a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -94,6 +109,7 @@ const Navigation = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="lg:hidden p-2 text-white hover:text-aqua transition-colors"
               aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -115,10 +131,7 @@ const Navigation = () => {
             <a
               key={link.name}
               href={link.href}
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection(link.href);
-              }}
+              onClick={(e) => handleNavClick(e, link)}
               className="text-2xl font-coda font-bold text-white hover:text-aqua transition-colors duration-300"
               style={{
                 animationDelay: `${index * 100}ms`,
@@ -128,20 +141,41 @@ const Navigation = () => {
             </a>
           ))}
           <a
-            href="tel:850-619-8613"
+            href={PHONE_TEL}
             className="flex items-center gap-2 text-aqua font-semibold mt-4"
           >
             <Phone className="w-5 h-5" />
-            (850) 619-8613
+            {PHONE_DISPLAY}
           </a>
-          <button
-            onClick={() => scrollToSection('#contact')}
-            className="btn-primary mt-4"
-          >
-            Book Online
-          </button>
+          <a href="/contact/" className="btn-primary mt-4">
+            Request Service
+          </a>
         </div>
       </div>
+
+      {/*
+        No-JavaScript fallback: the hamburger menu above cannot open without
+        JS, so when JS is unavailable expose the same real links as a plain
+        bar (browsers render <noscript> only when scripting is off).
+      */}
+      <noscript>
+        <div className="lg:hidden bg-navy-dark/95 border-b border-white/10 px-4 py-3">
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                <a href={link.href} className="text-white/80 hover:text-aqua">
+                  {link.name}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href={PHONE_TEL} className="text-aqua font-semibold">
+                {PHONE_DISPLAY}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </noscript>
     </>
   );
 };

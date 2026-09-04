@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Phase 0: the homepage is currently the only real, canonical, indexable URL.
-  Fragment targets (#services, #about, #contact) are NOT separate URLs and must not be listed.
-  <lastmod> is omitted deliberately: no reliable content-modification source is wired up yet.
-  <changefreq> and <priority> are omitted deliberately: Google ignores them.
+  Canonical sitemap for https://swisherplumbingllc.com
+
+  PHASE 1 (2026-09): one <url> per real, indexable, statically generated route.
+  All nine routes exist as real files under dist/ (dist/<route>/index.html).
+
+  - No anchor fragments: URL paths only.
+  - No redirects, errors, placeholders, or noindex pages.
+  - No lastmod: it must reflect a reliable content-modification source, and
+    none is wired up yet. Do not add fabricated dates.
+  - No changefreq or priority: they are ignored by Google and were previously
+    used to overstate how often the site changes.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://swisherplumbingllc.com/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/leak-detection-repair/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/drain-cleaning/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/water-heater-services/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/fixture-upgrades/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/sewer-line-service/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/plumbing-services/grinder-pumps/</loc>
+  </url>
+  <url>
+    <loc>https://swisherplumbingllc.com/contact/</loc>
   </url>
 </urlset>

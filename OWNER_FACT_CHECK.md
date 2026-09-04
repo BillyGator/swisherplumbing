@@ -4,6 +4,23 @@
 **Branch:** `seo/phase-0-foundation`
 **Status of every item below:** `UNVERIFIED`
 
+> ## 2026-09-03 update — pre-existing website content is client-approved
+>
+> The business owner has confirmed that **all content that existed on the
+> previously approved website is verified and approved by the customer**:
+> business history (including "since 2017"), service areas, services, hours,
+> testimonials, experience and statistics claims (including "23+ Years",
+> "10K+ Happy Customers", "100% Satisfaction Guarantee", "5.0 Rating"),
+> emergency-service wording, and licensing information (including
+> "FL License #CFC1429751" and "Licensed & Insured").
+>
+> This content is **preserved as approved** and is not to be removed,
+> neutralized, or re-investigated. The items below remain on record as the
+> original fact-check ledger for reference and for any *future* claims that
+> go beyond the approved content (e.g. address publication, social profile
+> URLs, privacy-policy text, new location pages), which still require written
+> owner answers before publication.
+
 ## How to use this document
 
 Phase 0 corrected the site's *technical* signals only. It deliberately did **not**

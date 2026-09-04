@@ -17,11 +17,12 @@
 # Phase 0 fix: missing URLs were returning HTTP 500 in production. A missing URL
 # must return a real 404 with this page as its body.
 #
-# There is deliberately NO SPA catch-all rewrite here. This site currently has
-# exactly one real route ("/"). A catch-all would turn every mistyped or
-# nonexistent URL into a soft-404 copy of the homepage, which is an indexing
-# defect, not a fix. Re-introduce routing rules only when real routes exist,
-# and then enumerate them - never with a blanket fallback.
+# There is deliberately NO SPA catch-all rewrite here. Every route is a real
+# file in dist/ (dist/<route>/index.html), generated at build time, so Apache
+# serves each URL directly and unknown URLs fall through to the 404 document
+# below. A catch-all would turn every mistyped URL into a soft-404 copy of a
+# real page — an indexing defect, not a fix. DirectoryIndex index.html is an
+# Apache default; do not add rewrite rules to "route" URLs to these files.
 # ---------------------------------------------------------------------------
 ErrorDocument 404 /404.html
 
