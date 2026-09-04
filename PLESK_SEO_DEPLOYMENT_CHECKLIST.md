@@ -4,9 +4,13 @@
 **Branch:** `seo/phase-0-foundation`
 **Production origin:** `https://swisherplumbingllc.com`
 
-> **Nothing in this document has been executed.** Phase 0 made repository changes only.
-> No commit, no push, and no deployment or Plesk operation was performed. Every step
-> below is for a human operator to carry out *after* the branch has been reviewed and merged.
+> **Status, 2026-09-03 evening: sections 1–5 are DONE and verified against the live
+> server.** Phase 0 was merged to `main` (PR #1) and auto-deployed by Plesk. Sections 6
+> and 7 (Search Console, structured-data validation) still need a human with account access.
+>
+> **How deployment works on this host, now confirmed:** any push to `main` on GitHub,
+> including a PR merge, is a live deploy. Plesk pulls automatically and serves `dist/`.
+> Changes are live in about 60 seconds. There is no staging environment.
 
 ---
 
@@ -26,6 +30,16 @@
 ---
 
 ## 1. Confirm the web-server layer *before* trusting `.htaccess`
+
+> **DONE — established empirically on 2026-09-03.** `.htaccess` is honoured on this host.
+> `ErrorDocument`, `Rewrite*`, `Header`, `Expires*`, `AddType`, and
+> `AddOutputFilterByType` all take effect, and static files (images, `.txt`, `.xml`) pass
+> through Apache rather than being served directly by nginx. No nginx directives needed.
+>
+> **Warning learned the hard way:** `<Location>` / `<LocationMatch>` are **not allowed**
+> in `.htaccess`. The first deploy contained one and every URL on the site returned 500
+> until hotfix `607d83f7` replaced it with `<FilesMatch>`. Test any future `.htaccess`
+> change before merging to `main`, because merging *is* deploying.
 
 **This is the single most important item in this document.**
 
@@ -64,22 +78,21 @@ In Plesk, for the `swisherplumbingllc.com` subscription, open
 an Apache-level rule keyed on `%{HTTPS}` commonly causes a redirect loop, because Apache
 sees the already-terminated request as plain HTTP.
 
-- [ ] In Plesk → **Hosting Settings**, confirm **"Permanent SEO-safe 301 redirect from
-      HTTP to HTTPS"** is enabled.
-- [ ] Confirm a valid SSL/TLS certificate covers **both** `swisherplumbingllc.com` and
-      `www.swisherplumbingllc.com`. The `www` → non-`www` redirect in `.htaccess` cannot
-      run if the TLS handshake for `www` fails first.
+- [x] ~~In Plesk → **Hosting Settings**, confirm the HTTP→HTTPS redirect is enabled.~~
+      **Verified live:** `http://swisherplumbingllc.com/` and `http://www.swisherplumbingllc.com/`
+      both 301 straight to `https://swisherplumbingllc.com/` in a single hop.
+- [x] ~~Confirm a valid SSL/TLS certificate covers both hosts.~~ **Verified live:**
+      `https://www.swisherplumbingllc.com/` negotiates TLS and 301s to the apex.
 
 Only if that Plesk setting is unavailable should an Apache-level rule be considered, and
 then it must be keyed on `%{HTTP:X-Forwarded-Proto}` rather than `%{HTTPS}`.
 
 ## 3. Deploy
 
-- [ ] Merge the reviewed `seo/phase-0-foundation` branch.
-- [ ] Run `npm run build` and confirm `dist/` contains `.htaccess`, `404.html`, and `llms.txt`.
-- [ ] Publish `dist/` to the document root.
-- [ ] **Confirm the upload actually transferred `.htaccess`.** Many FTP/SFTP clients and
-      sync tools skip dotfiles by default. Verify it exists on the server.
+- [x] Merge the reviewed `seo/phase-0-foundation` branch. **Done:** PR #1 → `4539755f`.
+- [x] Run `npm run build` and confirm `dist/` contains `.htaccess`, `404.html`, and `llms.txt`. **Done.**
+- [x] Publish `dist/` to the document root. **Done automatically** by Plesk's Git pull on merge.
+- [x] Confirm `.htaccess` transferred. **Confirmed** — its rules are visibly in effect (§4).
 
 ## 4. Verify with `curl` after deployment
 
@@ -119,18 +132,20 @@ curl -I https://swisherplumbingllc.com/404.html
 curl -I https://swisherplumbingllc.com/nonexistent-seo-test
 ```
 
-### Expected results
+### Expected results — and actual results on 2026-09-03 after hotfix `607d83f7`
 
-| Request | Expected status | Expected headers |
-| --- | --- | --- |
-| `https://swisherplumbingllc.com/` | `200` | `Content-Type: text/html` |
-| `https://www.swisherplumbingllc.com/` | `301` | `Location: https://swisherplumbingllc.com/` — exactly **one** hop |
-| `http://swisherplumbingllc.com/` | `301` | `Location: https://swisherplumbingllc.com/` — exactly **one** hop |
-| `/robots.txt` | `200` | `Content-Type: text/plain` |
-| `/sitemap.xml` | `200` | an XML content type (`application/xml` or `text/xml`) |
-| `/llms.txt` | `200` | `Content-Type: text/plain` |
-| `/404.html` | `200` | directly fetchable for testing |
-| `/nonexistent-seo-test` | **`404`** | must **not** be `200`, and must **not** be `500` |
+| Request | Expected status | Expected headers | **Actual** |
+| --- | --- | --- | --- |
+| `https://swisherplumbingllc.com/` | `200` | `Content-Type: text/html` | ✅ `200`, `text/html` |
+| `https://www.swisherplumbingllc.com/` | `301` | `Location: https://swisherplumbingllc.com/` — exactly **one** hop | ✅ `301`, one hop |
+| `http://swisherplumbingllc.com/` | `301` | `Location: https://swisherplumbingllc.com/` — exactly **one** hop | ✅ `301`, one hop |
+| `/robots.txt` | `200` | `Content-Type: text/plain` | ✅ `200`, `text/plain` |
+| `/sitemap.xml` | `200` | an XML content type (`application/xml` or `text/xml`) | ✅ `200`, `application/xml` |
+| `/llms.txt` | `200` | `Content-Type: text/plain` | ✅ `200`, `text/plain` |
+| `/404.html` | `200` | directly fetchable for testing | ✅ `200` |
+| `/nonexistent-seo-test` | **`404`** | must **not** be `200`, and must **not** be `500` | ✅ **`404`**, branded page, `noindex` |
+
+All eight pass. Re-run this table after any future change to `.htaccess` or the hosting settings.
 
 ### Failure triage
 
@@ -155,12 +170,12 @@ curl -I https://swisherplumbingllc.com/nonexistent-seo-test
 curl -I https://swisherplumbingllc.com/robots.txt
 ```
 
-- [ ] `robots.txt`, `sitemap.xml`, `llms.txt`, and HTML must **not** carry a long
-      `immutable` cache. They are mutable at a stable URL.
-- [ ] Fingerprinted build output under `/assets/` **may** carry
-      `Cache-Control: public, max-age=31536000, immutable`.
-- [ ] If nginx sets its own `Cache-Control`/`Expires`, it will override Apache's. Check
-      *Additional nginx directives* and reconcile.
+- [x] `robots.txt`, `sitemap.xml`, `llms.txt`, and HTML must **not** carry a long
+      `immutable` cache. **Verified live:** all four return `public, max-age=0, must-revalidate`.
+- [x] Fingerprinted build output under `/assets/` **may** carry
+      `Cache-Control: public, max-age=31536000, immutable`. **Verified live** on `index-CrvmSoJk.js`.
+- [x] If nginx sets its own `Cache-Control`/`Expires`, it will override Apache's.
+      **Verified:** the Apache headers reach the client unmodified, so nginx is not overriding them.
 
 ## 6. Search Console (requires the access in `OWNER_FACT_CHECK.md` item 22)
 

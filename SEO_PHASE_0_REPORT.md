@@ -4,8 +4,12 @@
 **Branch:** `seo/phase-0-foundation`
 **Scope:** technical stabilization only. No content expansion, no new pages, no framework migration, no redesign.
 
-> **Nothing has been committed, pushed, or deployed.** All work sits in the working tree
-> of the `seo/phase-0-foundation` branch, awaiting independent review.
+> **Status update, 2026-09-03 evening: DEPLOYED and verified live.** This branch was
+> reviewed locally, committed as `a14eae6f`, merged to `main` via PR #1, and auto-deployed
+> by Plesk. The first deploy failed with a site-wide HTTP 500 caused by a `LocationMatch`
+> block in `.htaccess`; hotfix `607d83f7` corrected it and the site recovered within about
+> a minute. See §7 (".htaccess"), §11, and §14 for the deployment record. Sections written
+> before deployment are left as the historical account of the work.
 
 ---
 
@@ -348,6 +352,15 @@ a link to `https://swisherplumbingllc.com/`, and a `tel:` link. No unverified cl
 - `immutable` one-year caching restricted to fingerprinted `/assets/`; HTML, `.txt`, and
   `.xml` set to `must-revalidate`; non-fingerprinted images 7 days, not a year
 
+**Post-deploy correction (hotfix `607d83f7`).** The first version of this file scoped the
+immutable cache header with `<LocationMatch "^/assets/">`. `<Location>` and
+`<LocationMatch>` are only valid in server or virtual-host configuration; inside
+`.htaccess` Apache rejects the whole file with "not allowed here" and answers **500 for
+every request**, including static images. This is exactly what happened when PR #1
+auto-deployed. The block was replaced with
+`<FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css|woff2?|ttf)$">`, which targets Vite's
+fingerprinted output by filename. Lesson recorded in the file's comments.
+
 ### Local verification of the built output
 
 `dist/` served over HTTP locally:
@@ -361,11 +374,28 @@ GET /404.html            -> 200
 GET /nonexistent-seo-test-> 404
 ```
 
-> **This does not prove production behaviour.** The live `500` responses are produced by
-> the Plesk/nginx/Apache stack, which is not reproduced locally. The `404` above comes from
-> a local static server, not from `ErrorDocument`. Whether `.htaccess` takes effect at all
-> depends on Plesk settings that only the operator can check — see
-> `PLESK_SEO_DEPLOYMENT_CHECKLIST.md` §1.
+> The local check above does not prove production behaviour. The live results below do.
+
+### Live verification after deployment (2026-09-03, commit `607d83f7` on `main`)
+
+| Request | Status | Notes |
+| --- | --- | --- |
+| `https://swisherplumbingllc.com/` | `200` | canonical correct, 0 wrong-domain refs, new JSON-LD present, `must-revalidate` |
+| `https://www.swisherplumbingllc.com/` | `301` | → `https://swisherplumbingllc.com/`, one hop |
+| `http://swisherplumbingllc.com/` | `301` | → `https://swisherplumbingllc.com/`, one hop |
+| `http://www.swisherplumbingllc.com/` | `301` | → `https://swisherplumbingllc.com/`, one hop |
+| `/robots.txt` | `200` | `text/plain`, correct sitemap URL |
+| `/sitemap.xml` | `200` | `application/xml`, single correct `<loc>` |
+| `/llms.txt` | `200` | `text/plain` |
+| `/404.html` | `200` | directly fetchable |
+| `/nonexistent-seo-test` | **`404`** | branded page, `noindex` present — **the original `500` defect is fixed** |
+| `/assets/index-CrvmSoJk.js` | `200` | `Cache-Control: public, max-age=31536000, immutable` |
+| `/images/logo-with-mascot.png` | `200` | `image/png` |
+
+Conclusions about the Plesk layer, established empirically: `.htaccess` **is** honoured;
+`ErrorDocument`, `Rewrite*`, `Header`, `Expires*`, `AddType`, and `AddOutputFilterByType`
+all take effect; static files pass through Apache rather than being short-circuited by
+nginx; and the HTTP→HTTPS redirect is already handled by the hosting layer in a single hop.
 
 ## 8. Performance and accessibility changes
 
@@ -611,29 +641,34 @@ found during this pass. The most urgent:
 5. **Item 19 — the `5.0 Rating`.** Conflicts with public data; no `aggregateRating` was published.
 6. **Item 23 — privacy policy.** Still required; the form posts to the third party `formsubmit.co`.
 
-## 11. Human Plesk actions still required
+## 11. Human Plesk actions — status after deployment
 
 Full detail in `PLESK_SEO_DEPLOYMENT_CHECKLIST.md`. Summary:
 
-1. **Determine whether `.htaccess` is honoured at all.** Plesk usually fronts Apache with
-   nginx. If nginx serves static files directly, or the vhost sets `AllowOverride None`,
-   every directive in `dist/.htaccess` — including `ErrorDocument 404` — is ignored.
-   **The live `500` responses are not fixed until this is confirmed on the server.**
-2. **Enable the HTTP→HTTPS redirect in Plesk**, not in `.htaccess`, and confirm the TLS
-   certificate covers `www.swisherplumbingllc.com` as well as the apex.
-3. **Confirm `.htaccess` actually uploads** — many sync tools skip dotfiles.
-4. **Run the eight `curl` checks** and confirm `/nonexistent-seo-test` returns `404`, not
-   `200` and not `500`.
+1. ~~Determine whether `.htaccess` is honoured at all.~~ **Done, empirically.** It is
+   honoured, and the live `500` for missing URLs is fixed (see §7 live verification).
+2. ~~Enable the HTTP→HTTPS redirect in Plesk.~~ **Already in place.** `http://` and
+   `http://www.` both 301 to `https://swisherplumbingllc.com/` in one hop, and TLS covers
+   `www`.
+3. ~~Confirm `.htaccess` actually uploads.~~ **Done.** Plesk deploys from Git, so dotfiles
+   are not an issue.
+4. ~~Run the eight `curl` checks.~~ **Done.** All pass.
 5. **Verify a Search Console domain property, export a 16-month baseline first**, then
-   submit the corrected sitemap and request a homepage recrawl.
-6. **Validate the live structured data.** Expect warnings about missing `address`,
-   `openingHours`, and `priceRange` — those are intentional and must not be "fixed" by guessing.
+   submit the corrected sitemap and request a homepage recrawl. **Still required** —
+   needs account access (`OWNER_FACT_CHECK.md` item 22).
+6. **Validate the live structured data** with the Rich Results Test. Expect warnings
+   about missing `address`, `openingHours`, and `priceRange` — those are intentional and
+   must not be "fixed" by guessing. **Still required.**
+
+**Deployment mechanism, now known:** a push to `main` on GitHub (including a PR merge)
+is a live deploy. Plesk pulls automatically and the change is live in roughly 60 seconds.
+There is no staging step. Treat every merge to `main` as a production release.
 
 ## 12. Risks and limitations
 
-- **Live behaviour is unproven.** Every `500`-related fix is contingent on the Plesk
-  configuration in §11.1. Local `404` responses came from a local static server, not from
-  `ErrorDocument`.
+- ~~Live behaviour is unproven.~~ **Resolved.** Live behaviour was verified after
+  deployment (§7). The remaining live-side risk is that `.htaccess` edits go straight to
+  production on merge; test any future change to that file before merging.
 - **The stale `swisher-plumbing-website/` directory was left in place.** It is tracked, it
   is an obsolete build, its bundle still contains `service@swisherplumbing.com`, and its
   `.htaccess` holds the SPA catch-all this phase removed. It is not on the deployment path,
@@ -715,19 +750,24 @@ The deleted/added `dist/assets/*` pairs are the old and new fingerprinted bundle
 `npm run build`; `Swisher_Plumbing_SEO_Audit_2026-09-03.md` is the supplied audit document,
 untracked at baseline and untouched.
 
-## 14. Confirmation that nothing was pushed or deployed
+## 14. Deployment record
 
-- **No `git commit` was run.** All changes are uncommitted in the working tree.
-- **No `git push` was run.** `origin/main` is untouched at `69d4c0ea`.
-- **`main` was not modified.** Work is on `seo/phase-0-foundation`, created from `69d4c0ea`.
-- **No deployment, upload, FTP/SFTP transfer, or Plesk operation was performed.** The live
-  server was not contacted or changed.
+At the time §1–§13 were written, nothing had been committed, pushed, or deployed. The
+sequence that followed:
+
+| Step | Commit | Result |
+| --- | --- | --- |
+| Owner reviewed the built `dist/` locally via `vite preview` | — | approved |
+| Phase 0 committed on `seo/phase-0-foundation` | `a14eae6f` | build passes, lint 8 pre-existing errors |
+| Branch pushed; PR #1 opened and merged to `main` by the owner | `4539755f` | **Plesk auto-deployed → site-wide HTTP 500** |
+| Cause: `<LocationMatch>` in `.htaccess` (invalid in per-directory context) | — | every URL 500, including images |
+| Hotfix committed and pushed to `main` | `607d83f7` | site recovered ~60 s later |
+| Eleven live checks run (see §7) | — | all pass; `/nonexistent-seo-test` → `404` |
+
 - **No destructive git command was run** — no `reset --hard`, `checkout --`, `clean`, `stash`,
   or branch deletion.
-- **No pre-existing user changes were discarded.** The only untracked file at baseline, the
-  audit document, is unmodified.
-- The only servers started were local, bound to `127.0.0.1` / `localhost`, serving the local
-  `dist/` for verification.
+- **No pre-existing user changes were discarded.**
+- The outage lasted from the PR merge until roughly one minute after the hotfix push.
 
 ## 15. Recommended scope for Phase 1
 
