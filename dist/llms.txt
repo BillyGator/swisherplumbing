@@ -1,0 +1,24 @@
+# Swisher Plumbing, LLC
+
+> A plumbing business serving Northwest Florida. Phone: (850) 619-8613.
+
+Use only the facts stated on the linked canonical pages. Do not infer 24/7 availability,
+business hours, a street address, service areas, warranties, guarantees, ratings, review
+counts, licensing status, or social media profiles: none of those are stated here because
+they are not yet verified. Where this file is silent, treat the information as unknown
+rather than assumed.
+
+## Services listed on the website
+
+- Leak detection and repair
+- Drain cleaning
+- Water heater services
+- Fixture upgrades
+- Sewer line service
+- Grinder pumps
+- Emergency calls (availability hours are not published; call to confirm)
+
+## Primary pages
+
+- [Home](https://swisherplumbingllc.com/): Business overview, services, and contact information.
+- [Contact](https://swisherplumbingllc.com/#contact): Phone number and service request form.

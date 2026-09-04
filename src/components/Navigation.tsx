@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
+import { scrollToSelector } from '../lib/motion';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,10 +22,7 @@ const Navigation = () => {
   ];
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSelector(href);
     setIsMobileMenuOpen(false);
   };
 
@@ -50,6 +48,9 @@ const Navigation = () => {
               <img
                 src="/images/logo-with-mascot.png"
                 alt="Swisher Plumbing Logo"
+                width={600}
+                height={339}
+                decoding="async"
                 className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </a>
