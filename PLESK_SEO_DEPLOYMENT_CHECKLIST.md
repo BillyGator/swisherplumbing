@@ -216,7 +216,7 @@ curl -I https://swisherplumbingllc.com/robots.txt
 # Phase 1 addendum — real multi-route architecture
 
 **Branch:** `seo/phase-1-crawlable-architecture` (NOT yet merged or deployed as of 2026-09-03)
-**What changes for the server:** the site is no longer a single page. There are nine
+**What changes for the server:** the site is no longer a single page. There are ten
 real routes, each a real `index.html` under `dist/`. **No `.htaccess` rewrite rules were
 added** — Apache's default directory index serves each route, and unknown URLs still fall
 through to `ErrorDocument 404`. The only `.htaccess` change is a comment update.
@@ -225,9 +225,9 @@ through to `ErrorDocument 404`. The only `.htaccess` change is a comment update.
 
 | File | Purpose |
 | --- | --- |
-| `dist/<route>/index.html` (8 new route files) | Prerendered pages: title, H1, copy, nav, JSON-LD all present without JavaScript. |
+| `dist/<route>/index.html` (9 new route files) | Prerendered pages: title, H1, copy, nav, JSON-LD all present without JavaScript. |
 | `dist/index.html` | Homepage now prerendered too — its content is in the raw HTML, not injected by JS. |
-| `dist/sitemap.xml` | Now lists all nine canonical routes. |
+| `dist/sitemap.xml` | Now lists all ten canonical routes. |
 | `dist/llms.txt` | Lists the hub and service pages. |
 | `dist/.htaccess` | Comment update only; rules unchanged. |
 | `dist/images/*-640.webp`, `*-2560.*`, `og-image.jpg`, etc. | Optimized image variants alongside untouched originals. |
@@ -250,13 +250,15 @@ curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing
 curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/sewer-line-service/
 curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/grinder-pumps/
 curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/contact/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/about/
 curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services
 curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/images/PelicanMascot-576.webp
 curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/images/og-image.jpg
 curl -I https://swisherplumbingllc.com/nonexistent-seo-test
 ```
 
-Expected: every route returns `200 text/html`; `/plumbing-services` (no trailing slash)
+Expected: every route returns `200 text/html` (ten routes — the About
+correction added `/about/`); `/plumbing-services` (no trailing slash)
 returns a single `301` to `/plumbing-services/`; the two image URLs return `200`;
 `/nonexistent-seo-test` still returns a real `404`.
 
@@ -270,7 +272,7 @@ returns a single `301` to `/plumbing-services/`; the two image URLs return `200`
       nodes; warnings about missing address/hours/price remain intentional.
 - [ ] Search Console (after §6): submit the expanded sitemap, then use URL Inspection on
       the hub page and one service page and request indexing.
-- [ ] In Search Console **Page Indexing**, watch that the nine sitemap URLs are discovered
+- [ ] In Search Console **Page Indexing**, watch that the ten sitemap URLs are discovered
       and that no soft-404s or "Page with redirect" errors appear.
 
 ## P1.4 Do not do these (Phase 1 additions)

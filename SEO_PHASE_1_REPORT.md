@@ -24,7 +24,11 @@ redesign, no invented business facts.
 ## Corrections pass (2026-09-04)
 
 Twelve focused technical fixes applied on top of the initial implementation,
-per independent review:
+per independent review, followed by a thirteenth correction — the standalone
+`/about/` page (see §6/§7): the primary navigation's About link must open its
+own crawlable page, not scroll to a homepage fragment, so `/about/` was
+published reusing the client-approved About content and all `/#about` links
+became `/about/`. The site now has 10 routes.
 
 1. **`code-path` debugging attributes removed from all production output.**
    `vite.config.ts` now loads `kimi-plugin-inspect-react` only for `vite serve`
@@ -171,6 +175,7 @@ dependencies were added.
 | `/plumbing-services/sewer-line-service/` | …/sewer-line-service/index.html | Full educational page |
 | `/plumbing-services/grinder-pumps/` | …/grinder-pumps/index.html | Full educational page |
 | `/contact/` | `dist/contact/index.html` | Reuses ContactSection (form identical); H1 + breadcrumbs added |
+| `/about/` | `dist/about/index.html` | **Added 2026-09-04 correction.** Reuses the client-approved AboutSection verbatim (story, values, statistics, testimonials); H1 + breadcrumbs added; `BreadcrumbList` JSON-LD, no `Service` schema |
 
 Every service page has: unique title/description, one canonical, one H1, H2
 sections (warning signs / why professional diagnosis / what the work can
@@ -181,11 +186,18 @@ original general-plumbing copy written for this site (in
 
 ## 7. Routes deliberately deferred
 
-`/about/` (thin without verified company facts), `/service-areas/` + all
+`/service-areas/` + all
 location pages (address/Pace-vs-Milton/cities unverified), an emergency-calls
 page (hours unverified), commercial/gas pages, reviews page, and
 `/privacy-policy/` (no owner-approved text). Full reasoning:
 `PHASE_1_CONTENT_BLOCKERS.md`.
+
+> **2026-09-04 update:** `/about/` was originally deferred but is now published
+> — the owner confirmed all pre-existing website content is verified and
+> client-approved (banner at the top of `OWNER_FACT_CHECK.md`), so the page
+> reuses the approved homepage About content verbatim. Navigation and footer
+> About links now point to `/about/` instead of `/#about`; the homepage keeps
+> the About section as its preview. The site now has **10 routes**.
 
 ## 8. Factual claims used and their source
 
@@ -215,19 +227,19 @@ and `twitter:card/url/title/description/image` — all on
 ## 10. Navigation, sitemap, robots, llms.txt, 404
 
 - **Navigation** (desktop + mobile): real crawlable links — `/`,
-  `/plumbing-services/`, `/#about` (homepage section; smooth-scrolls only when
-  already on `/`), `/contact/`. "Book Online" is now a real link to
-  `/contact/`. Logo links `/`.
+  `/plumbing-services/`, `/about/` (own page since the 2026-09-04 correction),
+  `/contact/`. "Request Service" is a real link to
+  `/contact/`. Logo links `/`. No navigation link uses `/#about` anymore.
 - **Footer**: Quick Links are real URLs; the services list is now real links
   to all six service pages; the homepage services-section cards link to their
   detail pages (the Emergency Calls card links to `/contact/` since no
   emergency page exists).
-- **sitemap.xml**: all nine canonical routes and nothing else; no fragments,
+- **sitemap.xml**: all ten canonical routes and nothing else; no fragments,
   no `lastmod`/`changefreq`/`priority`; well-formed (verified with
   `xml.dom.minidom`).
 - **robots.txt**: unchanged, still points at the correct sitemap.
-- **llms.txt**: lists the hub, six service pages, contact page, and the
-  emergency-calls caveat; keeps the explicit do-not-infer preamble.
+- **llms.txt**: lists the hub, six service pages, about page, and the
+  contact page; keeps the explicit do-not-infer preamble.
 - **404**: `public/404.html` unchanged (static, `noindex`, no JS); real 404
   behavior preserved — the local HTTP smoke test confirms nonexistent paths
   return 404, never 200/500.
@@ -373,7 +385,7 @@ Merge = deploy on this host (Plesk pulls `main` automatically, ~60 s, no
 staging). Before merging: `npm run build && npm run validate:static` must be
 green. After merging, run the full curl battery in
 `PLESK_SEO_DEPLOYMENT_CHECKLIST.md` §4 (Phase 0 table) **and** §P1.2 (new
-route checks). Expected: nine routes `200 text/html`; non-trailing-slash URLs
+route checks). Expected: ten routes `200 text/html` (the About correction added `/about/`); non-trailing-slash URLs
 single-`301` to the slash form; `/nonexistent-seo-test` still a real `404`;
 images served. Then Search Console sitemap resubmission and Rich Results
 Test per §6/§7/P1.3 of the checklist.

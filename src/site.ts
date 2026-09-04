@@ -112,6 +112,15 @@ export const ROUTES: RouteMeta[] = [
     name: 'Grinder Pumps',
   },
   {
+    path: '/about/',
+    title: 'About Swisher Plumbing, LLC | Serving the Florida Panhandle Since 2017',
+    description:
+      'Founded in Pace, Florida, Swisher Plumbing has served the Florida Panhandle with pride since 2017. Honest work, fair prices, neighborly service. (850) 619-8613.',
+    canonical: canonicalFor('/about/'),
+    image: OG_IMAGE,
+    name: 'About',
+  },
+  {
     path: '/contact/',
     title: 'Contact Swisher Plumbing, LLC | Call (850) 619-8613',
     description:

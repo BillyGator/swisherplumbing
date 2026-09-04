@@ -48,6 +48,19 @@ export function graphForRoute(route: RouteMeta): object {
     }
   }
 
+  if (route.path === '/about/') {
+    return buildGraph(
+      ...base,
+      breadcrumbListNode(
+        [
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about/' },
+        ],
+        route.canonical,
+      ),
+    );
+  }
+
   if (route.path === '/contact/') {
     return buildGraph(
       ...base,

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import ServicesHubPage from './pages/ServicesHubPage';
 import ServicePage from './pages/ServicePage';
 import ContactPage from './pages/ContactPage';
+import AboutPage from './pages/AboutPage';
 import { getService } from './content/services';
 import { getRoute } from './site';
 
@@ -25,6 +26,7 @@ function pageFor(path: string) {
   if (route.path === '/') return <HomePage />;
   if (route.path === '/plumbing-services/') return <ServicesHubPage />;
   if (route.path === '/contact/') return <ContactPage />;
+  if (route.path === '/about/') return <AboutPage />;
 
   const slug = route.path.split('/')[2];
   const service = getService(slug);

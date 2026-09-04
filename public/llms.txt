@@ -25,4 +25,5 @@ what the work can involve. None of the pages promise response times, prices, or 
 
 - [Home](https://swisherplumbingllc.com/): Business overview, services, and contact information.
 - [Plumbing services](https://swisherplumbingllc.com/plumbing-services/): Index of all services listed above.
+- [About](https://swisherplumbingllc.com/about/): Company history, values, statistics, and customer testimonials as published on the approved website.
 - [Contact](https://swisherplumbingllc.com/contact/): Phone number and service request form.

@@ -18,7 +18,7 @@ entry here, and publish the corresponding content.
 
 | Page | Blocked by | Needed owner answer |
 | --- | --- | --- |
-| `/about/` | Items 16/25 ("23+ years" vs "since 2017" contradiction), 14 (background checks), 17 (10K+ customers), 18 (testimonials), 19 (5.0 rating), 15 (guarantee) | A coherent, verified company story. As of Phase 1 there is not enough verified material for a non-thin About page; the homepage About section still carries unverified claims and was left untouched per policy. |
+| ~~`/about/`~~ — **published 2026-09-04** | — (resolved) | The owner confirmed all pre-existing website content is verified and client-approved (banner at the top of `OWNER_FACT_CHECK.md`), so `/about/` was published reusing the approved homepage About content verbatim. The JSON-LD for the page still omits the claims (no aggregateRating/review in schema). |
 | `/service-areas/` and all location pages | Items 2–4 (address, Pace vs Milton), 8 (verified cities/counties) | The verified service-area list and the address/service-area-business decision. |
 | `/plumbing-services/emergency-calls/` | Items 5–7 (hours, emergency hours, 24/7) | Exact emergency availability. An emergency page without verified availability wording would either be thin or misleading. Emergency calls are mentioned only on the hub page with the explicit note that availability is not published. |
 | `/commercial-plumbing/` | Item 10 | Confirmation that commercial work is offered and its scope. |
@@ -28,19 +28,25 @@ entry here, and publish the corresponding content.
 
 ## Claims kept off the new pages
 
-These appear in the existing homepage copy (left untouched per Phase 0/1
-policy) but were **not** propagated to any new page, metadata, schema, or
-`llms.txt`:
+Per the owner's 2026-09-04 confirmation (banner at the top of
+`OWNER_FACT_CHECK.md`), all pre-existing website content is verified and
+client-approved, so `/about/` reuses the approved homepage About content
+verbatim — statistics, testimonials, values and all. The claims below were
+**not invented for any page**, remain absent from metadata, JSON-LD, and the
+llms.txt assertions, and appear on interior pages only where they are part of
+that verbatim approved copy (`/about/`):
 
 - `23+ Years Experience` / `10K+ Happy Customers` / `100% Satisfaction
   Guarantee` / `5.0 Rating` (items 15–17, 19)
-- Same-day service language (item 13) — new pages say "describe what you are
-  seeing", never response times
+- Same-day service language (item 13) — service pages say "describe what you are
+  seeing", never response times; the About page's approved value card mentions
+  same-day service as published copy
 - Free-estimate language (item 12) — the reused contact form copy is
   parameterized: on `/contact/` the "free estimate" and "within 24 hours"
   lines are replaced with neutral wording; the homepage keeps its original copy
 - Background-checked technicians (item 14), licensed-and-insured status and
-  licence `CFC1429751` (item 20), warranties/guarantees (item 15)
+  licence `CFC1429751` (item 20), warranties/guarantees (item 15) — visible in
+  the approved About/footer copy; never emitted into structured data
 - 24/7 availability (items 6–7) — absent everywhere except the hub page's
   explicit "availability is not published" note
 

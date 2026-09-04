@@ -6,7 +6,7 @@ import { PHONE_DISPLAY, PHONE_TEL } from '../site';
 const quickLinks = [
   { name: 'Home', href: '/' },
   { name: 'Plumbing Services', href: '/plumbing-services/' },
-  { name: 'About', href: '/#about' },
+  { name: 'About', href: '/about/' },
   { name: 'Contact', href: '/contact/' },
 ];
 

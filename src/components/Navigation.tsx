@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
-import { scrollToSelector } from '../lib/motion';
 import { PHONE_DISPLAY, PHONE_TEL } from '../site';
 
 interface NavLink {
   name: string;
-  /** Real crawlable URL. Hash-only hrefs scroll when already on the homepage. */
+  /** Real crawlable URL. Every primary menu option opens its own page. */
   href: string;
-  /** True when the link targets a homepage section. */
-  isHomeSection?: boolean;
 }
 
 const navLinks: NavLink[] = [
   { name: 'Home', href: '/' },
   { name: 'Services', href: '/plumbing-services/' },
-  { name: 'About', href: '/#about', isHomeSection: true },
+  { name: 'About', href: '/about/' },
   { name: 'Contact', href: '/contact/' },
 ];
 
@@ -30,19 +27,9 @@ const Navigation = ({ currentPath }: { currentPath: string }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  /**
-   * Homepage-section links (currently only About, which has no standalone
-   * page) scroll smoothly when the visitor is already on the homepage.
-   * Everywhere else they are ordinary full navigations to `/#section`.
-   */
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: NavLink) => {
+  /** Close the mobile menu; the links themselves are ordinary navigations. */
+  const handleNavClick = () => {
     setIsMobileMenuOpen(false);
-    if (link.isHomeSection && currentPath === '/') {
-      const hash = link.href.slice(link.href.indexOf('#'));
-      if (scrollToSelector(hash)) {
-        e.preventDefault();
-      }
-    }
   };
 
   return (
@@ -82,7 +69,7 @@ const Navigation = ({ currentPath }: { currentPath: string }) => {
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => handleNavClick(e, link)}
+                  onClick={handleNavClick}
                   className="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300 font-medium"
                 >
                   {link.name}
@@ -131,7 +118,7 @@ const Navigation = ({ currentPath }: { currentPath: string }) => {
             <a
               key={link.name}
               href={link.href}
-              onClick={(e) => handleNavClick(e, link)}
+              onClick={handleNavClick}
               className="text-2xl font-coda font-bold text-white hover:text-aqua transition-colors duration-300"
               style={{
                 animationDelay: `${index * 100}ms`,

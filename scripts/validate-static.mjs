@@ -203,6 +203,8 @@ const sitemap = sitemapRaw.replace(/<!--[\s\S]*?-->/g, '');
 const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 const routes = sitemapLocs.map((loc) => new URL(loc).pathname);
 
+check(routes.length === 10, `sitemap lists exactly 10 indexable routes (found ${routes.length})`);
+check(routes.includes('/about/'), 'sitemap includes /about/');
 check(sitemapLocs.every((l) => l.startsWith(ORIGIN + '/')), 'sitemap uses only the canonical origin');
 check(!sitemap.includes('#'), 'sitemap contains no fragments');
 check(!/lastmod|changefreq|priority/.test(sitemap), 'sitemap has no lastmod/changefreq/priority');
@@ -304,6 +306,15 @@ for (const route of routes) {
   const badLinks = internalLinks.filter((href) => !existsSync(path.join(dist, href === '/' ? 'index.html' : `${href.replace(/\/$/, '')}/index.html`)));
   check(badLinks.length === 0, `${label}: all internal links resolve to generated files`, badLinks.join(', '));
 
+  // Primary navigation: every page carries the main menu, and it must link
+  // to the real About page — never to the old /#about fragment.
+  const navBlocks = [...html.matchAll(/<nav[\s\S]*?<\/nav>/g)].map((m) => m[0]);
+  check(
+    navBlocks.some((nav) => nav.includes('href="/about/"')),
+    `${label}: main navigation links to /about/`,
+  );
+  check(!html.includes('/#about'), `${label}: no navigation or content link uses /#about`);
+
   check(!/swisherplumbing\.com/.test(html), `${label}: no wrong-domain references`);
   check(!/href="#"/.test(html), `${label}: no href="#"`);
   check(!html.includes('code-path='), `${label}: zero code-path debugging attributes`);
@@ -334,6 +345,12 @@ check(!homeHtml.includes('Book Online'), 'old "Book Online" label is gone');
 check(!homeHtml.includes('We never share your information'), 'inaccurate privacy wording removed');
 const contactHtml = readFileSync(path.join(dist, 'contact', 'index.html'), 'utf8');
 check(contactHtml.includes('formsubmit.co'), 'contact page acknowledges the form-delivery service');
+
+// About page: approved company content must be present in the raw HTML.
+const aboutHtml = readFileSync(path.join(dist, 'about', 'index.html'), 'utf8');
+check(aboutHtml.includes('serving the Florida Panhandle'), '/about/: approved company story in raw HTML');
+check(aboutHtml.includes('since 2017'), '/about/: founding-year statement in raw HTML');
+check(aboutHtml.includes('What Our Neighbors Are Saying'), '/about/: approved testimonials in raw HTML');
 
 // Focus-visible styling must exist in the built CSS.
 const builtCss = readdirSync(path.join(dist, 'assets')).filter((f) => f.endsWith('.css'))
