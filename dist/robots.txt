@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://swisherplumbing.com/sitemap.xml
+Sitemap: https://swisherplumbingllc.com/sitemap.xml

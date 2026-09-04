@@ -135,3 +135,71 @@
     }
   }
 }
+
+@layer utilities {
+  /*
+    Hero entrance animations.
+
+    These replace a previous React `isLoaded` state that was set synchronously
+    inside a useEffect (which also tripped react-hooks/set-state-in-effect).
+    The keyframes reproduce the exact same start and end values.
+
+    NOTE: no `fill-mode` is used, deliberately. The elements' base styles are
+    already the finished state, so the animation only ever plays *into* what is
+    otherwise shown. If the animation never runs at all - a background tab that
+    is never focused, a throttled compositor, CSS animations disabled - the hero
+    headline and mascot stay visible. With `fill-mode: both` they would instead
+    be stuck at the 0-opacity `from` frame, hiding the page's primary content.
+  */
+  .animate-hero-card-in {
+    animation: hero-card-in 700ms ease-out;
+  }
+
+  @keyframes hero-card-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -45%) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  .animate-hero-mascot-in {
+    animation: hero-mascot-in 1000ms ease-out;
+  }
+
+  @keyframes hero-mascot-in {
+    from {
+      opacity: 0;
+      transform: translate3d(10vw, 50px, 0) rotate(-6deg);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+  }
+}
+
+/*
+  Reduced motion.
+
+  Visitors who have asked their OS to reduce motion get the finished layout with
+  no looping float/pulse animations and no long transitions. Scroll-driven
+  parallax is disabled separately in JavaScript (see src/lib/motion.ts), because
+  it is applied as an inline transform rather than as a CSS animation.
+
+  The hero animations above use no fill mode, so shortening them here simply
+  lands on the element's normal, fully visible base styles.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

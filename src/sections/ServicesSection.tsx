@@ -10,6 +10,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import RevealOnScroll from '../components/RevealOnScroll';
+import { observeScroll, scrollToSelector } from '../lib/motion';
 
 interface Service {
   icon: React.ReactNode;
@@ -17,6 +18,9 @@ interface Service {
   description: string;
   features: string[];
   image?: string;
+  /** Intrinsic pixel size of `image`, used to reserve layout space. */
+  width?: number;
+  height?: number;
 }
 
 const services: Service[] = [
@@ -26,6 +30,8 @@ const services: Service[] = [
     description: 'Fast, accurate leak detection and lasting repairs for pipes, faucets, and fixtures.',
     features: ['Slab leak detection', 'Pipe repair', 'Faucet fixes'],
     image: '/images/Working_under_sink.png',
+    width: 1200,
+    height: 1193,
   },
   {
     icon: <Minus className="w-8 h-8" />,
@@ -33,6 +39,8 @@ const services: Service[] = [
     description: 'Clear clogged drains and keep your plumbing flowing smoothly.',
     features: ['Hydro jetting', 'Snake cleaning', 'Preventive maintenance'],
     image: '/images/pelican-drain.png',
+    width: 309,
+    height: 224,
   },
   {
     icon: <Flame className="w-8 h-8" />,
@@ -40,6 +48,8 @@ const services: Service[] = [
     description: 'Installation, repair, and maintenance for all water heater types.',
     features: ['Tankless installs', 'Repairs', 'Maintenance'],
     image: '/images/Water_heater_repair.png',
+    width: 1131,
+    height: 1200,
   },
   {
     icon: <Bath className="w-8 h-8" />,
@@ -47,6 +57,8 @@ const services: Service[] = [
     description: 'Modern fixtures that save water and enhance your space.',
     features: ['Faucets', 'Toilets', 'Showerheads'],
     image: '/images/Pelican_fixture_upgrade.png',
+    width: 1200,
+    height: 1185,
   },
   {
     icon: <Wrench className="w-8 h-8" />,
@@ -54,6 +66,8 @@ const services: Service[] = [
     description: 'Complete sewer line inspection, repair, and replacement.',
     features: ['Video inspection', 'Line repair', 'Grinder Pumps'],
     image: '/images/pelican-sewer.png',
+    width: 640,
+    height: 646,
   },
   {
     icon: <AlertCircle className="w-8 h-8" />,
@@ -61,20 +75,29 @@ const services: Service[] = [
     description: 'Emergency plumbing service when you need it most.',
     features: ['Fast response', 'Expert solutions', 'Reliable repairs'],
     image: '/images/pelican-emergency-final.png',
+    width: 1072,
+    height: 1060,
   },
 ];
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeService, setActiveService] = useState<number | null>(null);
-  const [scrollY, setScrollY] = useState(0);
+  const blobLeftRef = useRef<HTMLDivElement>(null);
+  const blobRightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Decorative parallax blobs. Written straight to the DOM in a rAF callback
+    // rather than through React state, so scrolling no longer re-renders this
+    // section. Disabled for reduced-motion visitors (see src/lib/motion.ts).
+    return observeScroll((scrollY) => {
+      if (blobLeftRef.current) {
+        blobLeftRef.current.style.transform = `translate3d(0, ${(scrollY - 1000) * 0.1}px, 0)`;
+      }
+      if (blobRightRef.current) {
+        blobRightRef.current.style.transform = `translate3d(0, ${(scrollY - 1000) * -0.05}px, 0)`;
+      }
+    });
   }, []);
 
   return (
@@ -88,12 +111,12 @@ const ServicesSection = () => {
 
       {/* Parallax Blobs */}
       <div
+        ref={blobLeftRef}
         className="absolute top-[10%] left-[5%] w-64 h-64 bg-coral/10 rounded-full blur-3xl will-change-transform"
-        style={{ transform: `translateY(${(scrollY - 1000) * 0.1}px)` }}
       />
       <div
+        ref={blobRightRef}
         className="absolute bottom-[10%] right-[5%] w-96 h-96 bg-sand/5 rounded-full blur-3xl will-change-transform"
-        style={{ transform: `translateY(${(scrollY - 1000) * -0.05}px)` }}
       />
 
       <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-16">
@@ -118,6 +141,10 @@ const ServicesSection = () => {
                 <img
                   src="/images/PelicanMascot.png"
                   alt="Swisher Plumbing Pelican Mascot - Friendly Service in Pensacola, FL"
+                  width={1937}
+                  height={2872}
+                  loading="lazy"
+                  decoding="async"
                   className="relative w-full h-full object-contain animate-float"
                 />
               </div>
@@ -187,10 +214,7 @@ const ServicesSection = () => {
 
             <RevealOnScroll delay={600}>
               <button
-                onClick={() => {
-                  const el = document.querySelector('#contact');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => scrollToSelector('#contact')}
                 className="w-full mt-6 btn-primary flex items-center justify-center gap-2 group"
               >
                 Get a Free Quote
@@ -208,6 +232,10 @@ const ServicesSection = () => {
                     <img
                       src={activeService !== null ? services[activeService].image : "/images/Pelican-Services-Pic-1200.jpg"}
                       alt={activeService !== null ? `${services[activeService].title} Service in Milton & Pace, FL` : "Swisher Plumbing Services Collage - Plumbing Solutions in Florida Panhandle"}
+                      width={activeService !== null ? services[activeService].width : 1200}
+                      height={activeService !== null ? services[activeService].height : 805}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-contain transition-all duration-700 transform hover:scale-105"
                       key={activeService ?? 'default'} // Force re-render for animation
                     />

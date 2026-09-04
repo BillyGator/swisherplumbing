@@ -71,6 +71,10 @@ const AboutSection = () => {
         <img
           src="/images/SectionBackground.png"
           alt="Swisher Plumbing Service Area Background"
+          width={7761}
+          height={3768}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover opacity-90"
         />
         {/* Subtle overlay for text readability */}

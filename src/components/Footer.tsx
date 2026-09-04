@@ -1,4 +1,5 @@
-import { Phone, MapPin, Facebook, Instagram, ArrowUp } from 'lucide-react';
+import { Phone, MapPin, ArrowUp } from 'lucide-react';
+import { prefersReducedMotion, scrollToSelector } from '../lib/motion';
 
 const quickLinks = [
   { name: 'Home', href: '#home' },
@@ -18,14 +19,11 @@ const services = [
 
 const Footer = () => {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   };
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSelector(href);
   };
 
   return (
@@ -61,27 +59,25 @@ const Footer = () => {
             <img
               src="/images/logo-with-mascot.png"
               alt="Swisher Plumbing Logo - Pace & Milton, FL"
+              width={600}
+              height={339}
+              loading="lazy"
+              decoding="async"
               className="h-20 w-auto object-contain mb-4"
             />
             <p className="text-white/60 mb-6">
               Florida plumbing, fixed fast. Serving Pace and the Florida Panhandle with pride since 2017.
             </p>
-            <div className="flex gap-3">
-              <a
-                href="#"
-                className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/60 hover:bg-aqua hover:text-navy transition-all duration-300"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/60 hover:bg-aqua hover:text-navy transition-all duration-300"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-            </div>
+            {/*
+              PHASE 0: the Facebook and Instagram controls previously rendered as
+              <a href="#">, which is a dead business-facing link. No verified social
+              profile URL exists anywhere in this repository, so the controls were
+              removed rather than pointed at a guessed username.
+
+              To restore them, get the real profile URLs from the owner
+              (OWNER_FACT_CHECK.md item 21), then re-add real <a href="https://..."
+              rel="noopener" target="_blank"> anchors here. Do not restore href="#".
+            */}
           </div>
 
           {/* Quick Links */}
@@ -158,9 +154,14 @@ const Footer = () => {
       </div>
 
       {/* Decorative pelican */}
+      {/* Decorative duplicate of the logo: empty alt so it is not announced twice. */}
       <img
         src="/images/logo-with-mascot.png"
         alt=""
+        width={600}
+        height={339}
+        loading="lazy"
+        decoding="async"
         className="absolute bottom-0 right-4 w-32 h-auto opacity-10 pointer-events-none"
       />
     </footer>

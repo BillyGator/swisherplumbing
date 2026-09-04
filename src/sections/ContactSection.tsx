@@ -16,7 +16,40 @@ import RevealOnScroll from '../components/RevealOnScroll';
 // FormSubmit.co ID for secure submission without exposing email in network requests
 const FORMSUBMIT_ID = '130c27e5fcdd9462a03f1b42c90e7de2';
 
-const contactInfo = [
+// =============================================================================
+// SINGLE SOURCE OF TRUTH FOR PUBLICLY DISPLAYED BUSINESS HOURS
+//
+// !!! OWNER VERIFICATION REQUIRED - DO NOT COPY THESE VALUES ELSEWHERE !!!
+//
+// The values below are the hours that were ALREADY on the live site. They are
+// reproduced here unchanged on purpose: Phase 0 does not rewrite visible business
+// facts. They are centralized here so that once the owner confirms the real
+// schedule it can be corrected in exactly one place.
+//
+// At least four mutually incompatible schedules exist for this business:
+//   1. this constant (site contact section)  Mon-Fri 7am-7pm, Sat 8am-12pm
+//   2. the old JSON-LD (removed in Phase 0)  Mon-Fri 7am-6pm, Sat 8am-4pm
+//   3. the old meta description (removed)    "24/7"
+//   4. public directory listings             Mon-Fri 7am-5pm, Sat 7am-12pm
+//
+// See OWNER_FACT_CHECK.md items 5-7. Until the owner answers, these hours must
+// NOT be republished into metadata, JSON-LD, llms.txt, or any listing.
+// =============================================================================
+const BUSINESS_HOURS = {
+  weekdays: 'Mon-Fri: 7am-7pm',
+  weekend: 'Sat: 8am-12pm | Sun: Closed',
+};
+
+interface ContactInfoItem {
+  icon: React.ReactNode;
+  title: string;
+  content: string;
+  description: string;
+  /** Only set for entries that are genuinely actionable links. */
+  href?: string;
+}
+
+const contactInfo: ContactInfoItem[] = [
   {
     icon: <Phone className="w-6 h-6" />,
     title: 'Phone',
@@ -25,18 +58,20 @@ const contactInfo = [
     description: 'Call us anytime!',
   },
   {
+    // PHASE 0: previously an <a href="#">. This card is informational, not a link.
+    // A real map/directions URL requires the verified address (OWNER_FACT_CHECK.md
+    // items 2-4), so it is rendered as plain content rather than a dead anchor.
     icon: <MapPin className="w-6 h-6" />,
     title: 'Location',
     content: 'Pace, FL 32571',
-    href: '#',
     description: 'Serving the Florida Panhandle',
   },
   {
+    // PHASE 0: previously an <a href="#">. Informational, not a link.
     icon: <Clock className="w-6 h-6" />,
     title: 'Hours',
-    content: 'Mon-Fri: 7am-7pm',
-    href: '#',
-    description: 'Sat: 8am-12pm | Sun: Closed',
+    content: BUSINESS_HOURS.weekdays,
+    description: BUSINESS_HOURS.weekend,
   },
 ];
 
@@ -134,27 +169,38 @@ const ContactSection = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Contact Cards */}
             <div className="grid sm:grid-cols-2 gap-4">
-              {contactInfo.map((info, index) => (
-                <RevealOnScroll key={info.title} effect="fade-right" delay={index * 100}>
-                  <a
-                    href={info.href}
-                    className="glass-card p-5 group hover:border-aqua/50 transition-all duration-300 block h-full transform hover:-translate-y-1 hover:shadow-lg hover:shadow-aqua/5"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-navy-light text-sunset rounded-xl flex items-center justify-center group-hover:bg-sunset group-hover:text-white transition-all duration-300 shadow-inner">
-                        {info.icon}
-                      </div>
-                      <div>
-                        <p className="text-white/50 text-sm mb-1">{info.title}</p>
-                        <p className="text-white font-semibold group-hover:text-aqua transition-colors break-words text-sm sm:text-base">
-                          {info.content}
-                        </p>
-                        <p className="text-white/40 text-xs mt-1">{info.description}</p>
-                      </div>
+              {contactInfo.map((info, index) => {
+                const cardClasses =
+                  'glass-card p-5 group hover:border-aqua/50 transition-all duration-300 block h-full transform hover:-translate-y-1 hover:shadow-lg hover:shadow-aqua/5';
+                const cardBody = (
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-navy-light text-sunset rounded-xl flex items-center justify-center group-hover:bg-sunset group-hover:text-white transition-all duration-300 shadow-inner">
+                      {info.icon}
                     </div>
-                  </a>
-                </RevealOnScroll>
-              ))}
+                    <div>
+                      <p className="text-white/50 text-sm mb-1">{info.title}</p>
+                      <p className="text-white font-semibold group-hover:text-aqua transition-colors break-words text-sm sm:text-base">
+                        {info.content}
+                      </p>
+                      <p className="text-white/40 text-xs mt-1">{info.description}</p>
+                    </div>
+                  </div>
+                );
+
+                return (
+                  <RevealOnScroll key={info.title} effect="fade-right" delay={index * 100}>
+                    {info.href ? (
+                      <a href={info.href} className={cardClasses}>
+                        {cardBody}
+                      </a>
+                    ) : (
+                      // Informational card: not a link, so it is not focusable and
+                      // is not announced as a link by assistive technology.
+                      <div className={cardClasses}>{cardBody}</div>
+                    )}
+                  </RevealOnScroll>
+                );
+              })}
             </div>
 
             {/* Service Areas */}
@@ -328,8 +374,16 @@ const ContactSection = () => {
                         )}
                       </Button>
 
+                      {/*
+                        PHASE 0: the previous copy said "you agree to our privacy policy",
+                        but no privacy policy page or link exists on this site, so that
+                        statement asked the visitor to agree to a document they cannot read.
+                        Replaced with a plain statement of use. An owner-reviewed privacy
+                        policy is still REQUIRED (OWNER_FACT_CHECK.md item 23); once it is
+                        published, link to it from here.
+                      */}
                       <p className="text-center text-white/30 text-xs">
-                        By submitting, you agree to our privacy policy. We never share your information.
+                        We use the details you send only to respond to your request. We never share your information.
                       </p>
                     </form>
                   </>
