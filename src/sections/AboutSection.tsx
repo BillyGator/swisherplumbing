@@ -68,15 +68,18 @@ const AboutSection = () => {
     >
       {/* Image Background */}
       <div className="absolute inset-0 w-full h-full">
-        <img
-          src="/images/SectionBackground.png"
-          alt="Swisher Plumbing Service Area Background"
-          width={7761}
-          height={3768}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover opacity-90"
-        />
+        <picture>
+          <source srcSet="/images/SectionBackground-2560.webp" type="image/webp" />
+          <img
+            src="/images/SectionBackground-2560.jpg"
+            alt="Swisher Plumbing Service Area Background"
+            width={2560}
+            height={1243}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover opacity-90"
+          />
+        </picture>
         {/* Subtle overlay for text readability */}
         <div className="absolute inset-0 bg-navy/20" />
       </div>

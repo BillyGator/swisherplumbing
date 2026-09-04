@@ -203,3 +203,62 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+  Scroll-reveal (see src/components/RevealOnScroll.tsx).
+
+  The base state is fully visible — identical on server and client, which is
+  what makes hydration stable. Only AFTER hydration does JS add `reveal-init`
+  (hidden start pose) to blocks that are still below the fold, and
+  `reveal-shown` once they enter the viewport. Both hiding rules are gated
+  behind `html.js`, so without JavaScript nothing here can hide content.
+*/
+.reveal {
+  transition:
+    opacity 1000ms ease-out,
+    transform 1000ms ease-out;
+  will-change: opacity, transform;
+}
+
+.js .reveal.reveal-init {
+  opacity: 0;
+  transform: var(--reveal-from, translateY(3rem));
+}
+
+.js .reveal.reveal-shown {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none !important;
+  }
+
+  .js .reveal.reveal-init {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+  Visible keyboard focus (Phase 1 correction).
+
+  A single branded, high-contrast focus ring for every interactive element —
+  primary/secondary buttons, navigation and service links, breadcrumbs,
+  mobile-menu controls, and the scroll-to-top button. The browser default was
+  easy to lose against the dark navy background, so this is deliberately
+  bright (brand aqua) with a generous offset. Applies to :focus-visible only;
+  mouse clicks are unaffected.
+*/
+:focus-visible {
+  outline: 3px solid #38bdf8;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 3px solid #7dd3fc;
+  outline-offset: 4px;
+}

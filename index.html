@@ -2,7 +2,16 @@
 <html lang="en">
 
 <head>
+  <!--
+    DEV-SERVER SHELL ONLY. Production HTML (head + prerendered body) is
+    generated at build time by scripts/prerender.mjs from src/site.ts
+    (metadata), src/pages/jsonld.ts (structured data), and the route
+    components. Do not treat this file's body or head as the production
+    source of truth; run `npm run build` and inspect dist/<route>/index.html.
+  -->
   <meta charset="UTF-8" />
+  <!-- Marks JS as available before React loads; RevealOnScroll only hides content behind this class, so no-JS visitors and crawlers still see everything. -->
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="icon" type="image/svg+xml" href="images/Swisher_Favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

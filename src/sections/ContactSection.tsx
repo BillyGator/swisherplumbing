@@ -378,12 +378,18 @@ const ContactSection = () => {
                         PHASE 0: the previous copy said "you agree to our privacy policy",
                         but no privacy policy page or link exists on this site, so that
                         statement asked the visitor to agree to a document they cannot read.
-                        Replaced with a plain statement of use. An owner-reviewed privacy
-                        policy is still REQUIRED (OWNER_FACT_CHECK.md item 23); once it is
-                        published, link to it from here.
+
+                        PHASE 1 correction: the earlier replacement claimed "we never
+                        share your information", which was inaccurate — the form posts to
+                        the third-party delivery service formsubmit.co, which processes
+                        the submission (and the visitor's email client) so the business
+                        can reply. The wording below states only what is true. An
+                        owner-reviewed privacy policy is still REQUIRED
+                        (OWNER_FACT_CHECK.md item 23); once it is published, link to it
+                        from here.
                       */}
                       <p className="text-center text-white/30 text-xs">
-                        We use the details you send only to respond to your request. We never share your information.
+                        We use the details you send only to respond to your request. Messages are delivered through formsubmit.co, which processes the submission so we can reply.
                       </p>
                     </form>
                   </>

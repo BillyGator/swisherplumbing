@@ -11,72 +11,97 @@ import {
 } from 'lucide-react';
 import RevealOnScroll from '../components/RevealOnScroll';
 import { observeScroll, scrollToSelector } from '../lib/motion';
+import { serviceUrl } from '../content/services';
 
 interface Service {
+  /** Slug of the matching detail page under /plumbing-services/. */
+  slug: string;
   icon: React.ReactNode;
   title: string;
   description: string;
   features: string[];
-  image?: string;
-  /** Intrinsic pixel size of `image`, used to reserve layout space. */
+  /** Where the card's title link points. Emergency calls has no page of its
+   * own (availability is unverified), so it links to the contact page. */
+  pageHref: string;
+  webp?: string;
+  fallback?: string;
+  /** Intrinsic pixel size of the fallback image, used to reserve layout space. */
   width?: number;
   height?: number;
 }
 
 const services: Service[] = [
   {
+    slug: 'leak-detection-repair',
     icon: <Droplets className="w-8 h-8" />,
     title: 'Leak Detection & Repair',
     description: 'Fast, accurate leak detection and lasting repairs for pipes, faucets, and fixtures.',
     features: ['Slab leak detection', 'Pipe repair', 'Faucet fixes'],
-    image: '/images/Working_under_sink.png',
-    width: 1200,
-    height: 1193,
+    pageHref: serviceUrl('leak-detection-repair'),
+    webp: '/images/Working_under_sink-640.webp',
+    fallback: '/images/Working_under_sink-640.png',
+    width: 640,
+    height: 636,
   },
   {
+    slug: 'drain-cleaning',
     icon: <Minus className="w-8 h-8" />,
     title: 'Drain Cleaning',
     description: 'Clear clogged drains and keep your plumbing flowing smoothly.',
     features: ['Hydro jetting', 'Snake cleaning', 'Preventive maintenance'],
-    image: '/images/pelican-drain.png',
+    pageHref: serviceUrl('drain-cleaning'),
+    webp: '/images/pelican-drain.webp',
+    fallback: '/images/pelican-drain.png',
     width: 309,
     height: 224,
   },
   {
+    slug: 'water-heater-services',
     icon: <Flame className="w-8 h-8" />,
     title: 'Water Heater Services',
     description: 'Installation, repair, and maintenance for all water heater types.',
     features: ['Tankless installs', 'Repairs', 'Maintenance'],
-    image: '/images/Water_heater_repair.png',
-    width: 1131,
-    height: 1200,
+    pageHref: serviceUrl('water-heater-services'),
+    webp: '/images/Water_heater_repair-640.webp',
+    fallback: '/images/Water_heater_repair-640.png',
+    width: 640,
+    height: 679,
   },
   {
+    slug: 'fixture-upgrades',
     icon: <Bath className="w-8 h-8" />,
     title: 'Fixture Upgrades',
     description: 'Modern fixtures that save water and enhance your space.',
     features: ['Faucets', 'Toilets', 'Showerheads'],
-    image: '/images/Pelican_fixture_upgrade.png',
-    width: 1200,
-    height: 1185,
+    pageHref: serviceUrl('fixture-upgrades'),
+    webp: '/images/Pelican_fixture_upgrade-640.webp',
+    fallback: '/images/Pelican_fixture_upgrade-640.png',
+    width: 640,
+    height: 632,
   },
   {
+    slug: 'sewer-line-service',
     icon: <Wrench className="w-8 h-8" />,
     title: 'Sewer Line Service',
     description: 'Complete sewer line inspection, repair, and replacement.',
     features: ['Video inspection', 'Line repair', 'Grinder Pumps'],
-    image: '/images/pelican-sewer.png',
+    pageHref: serviceUrl('sewer-line-service'),
+    webp: '/images/pelican-sewer-640.webp',
+    fallback: '/images/pelican-sewer-640.png',
     width: 640,
     height: 646,
   },
   {
+    slug: 'grinder-pumps',
     icon: <AlertCircle className="w-8 h-8" />,
     title: 'Emergency Calls',
     description: 'Emergency plumbing service when you need it most.',
     features: ['Fast response', 'Expert solutions', 'Reliable repairs'],
-    image: '/images/pelican-emergency-final.png',
-    width: 1072,
-    height: 1060,
+    pageHref: '/contact/',
+    webp: '/images/pelican-emergency-final-640.webp',
+    fallback: '/images/pelican-emergency-final-640.png',
+    width: 640,
+    height: 633,
   },
 ];
 
@@ -138,15 +163,21 @@ const ServicesSection = () => {
             <div className="inline-flex flex-col md:flex-row items-center gap-8 bg-navy-light/50 border border-aqua/20 rounded-3xl p-8 max-w-4xl mx-auto backdrop-blur-sm hover:border-aqua/40 transition-colors duration-300">
               <div className="relative w-48 h-48 flex-shrink-0">
                 <div className="absolute inset-0 bg-aqua/20 rounded-full blur-xl animate-pulse-slow"></div>
-                <img
-                  src="/images/PelicanMascot.png"
-                  alt="Swisher Plumbing Pelican Mascot - Friendly Service in Pensacola, FL"
-                  width={1937}
-                  height={2872}
-                  loading="lazy"
-                  decoding="async"
-                  className="relative w-full h-full object-contain animate-float"
-                />
+                <picture>
+                  <source
+                    srcSet="/images/PelicanMascot-288.webp 288w, /images/PelicanMascot-576.webp 576w"
+                    type="image/webp"
+                  />
+                  <img
+                    src="/images/PelicanMascot-576.png"
+                    alt="Swisher Plumbing Pelican Mascot - Friendly Service in Pensacola, FL"
+                    width={576}
+                    height={854}
+                    loading="lazy"
+                    decoding="async"
+                    className="relative w-full h-full object-contain animate-float"
+                  />
+                </picture>
               </div>
               <div className="text-left">
                 <p className="text-2xl font-coda text-white mb-2">
@@ -180,7 +211,12 @@ const ServicesSection = () => {
                     </div>
                     <div className="flex-1 w-full min-w-0">
                       <h3 className="text-xl sm:text-2xl md:text-3xl group-hover:text-xl font-coda font-bold text-white mb-1 group-hover:text-aqua transition-all duration-300 truncate group-hover:whitespace-normal">
-                        {service.title}
+                        <a
+                          href={service.pageHref}
+                          className="hover:text-aqua transition-colors"
+                        >
+                          {service.title}
+                        </a>
                       </h3>
 
                       <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-300">
@@ -229,16 +265,21 @@ const ServicesSection = () => {
               <div className="relative w-[80%] mx-auto">
                 <div className="relative transition-transform duration-500 hover:scale-[1.02]">
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/5]">
-                    <img
-                      src={activeService !== null ? services[activeService].image : "/images/Pelican-Services-Pic-1200.jpg"}
-                      alt={activeService !== null ? `${services[activeService].title} Service in Milton & Pace, FL` : "Swisher Plumbing Services Collage - Plumbing Solutions in Florida Panhandle"}
-                      width={activeService !== null ? services[activeService].width : 1200}
-                      height={activeService !== null ? services[activeService].height : 805}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-contain transition-all duration-700 transform hover:scale-105"
-                      key={activeService ?? 'default'} // Force re-render for animation
-                    />
+                    <picture key={activeService ?? 'default'}>
+                      <source
+                        srcSet={activeService !== null ? services[activeService].webp : "/images/Pelican-Services-Pic-1200-640.webp"}
+                        type="image/webp"
+                      />
+                      <img
+                        src={activeService !== null ? services[activeService].fallback : "/images/Pelican-Services-Pic-1200-640.jpg"}
+                        alt={activeService !== null ? `${services[activeService].title} Service in Milton & Pace, FL` : "Swisher Plumbing Services Collage - Plumbing Solutions in Florida Panhandle"}
+                        width={activeService !== null ? services[activeService].width : 640}
+                        height={activeService !== null ? services[activeService].height : 429}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-contain transition-all duration-700 transform hover:scale-105"
+                      />
+                    </picture>
 
 
                   </div>

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Phone, Calendar, Clock } from 'lucide-react';
-import { observeScroll, scrollToSelector } from '../lib/motion';
+import { observeScroll } from '../lib/motion';
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -34,14 +34,17 @@ const HeroSection = () => {
     >
       {/* Beach Background with Parallax */}
       <div ref={backgroundRef} className="absolute inset-0 z-0 will-change-transform">
-        <img
-          src="/images/beach-background.jpg"
-          alt="Florida beach sunset"
-          width={2400}
-          height={2032}
-          fetchPriority="high"
-          className="w-full h-full object-cover"
-        />
+        <picture>
+          <source srcSet="/images/beach-background-1920.webp" type="image/webp" />
+          <img
+            src="/images/beach-background.jpg"
+            alt="Florida beach sunset"
+            width={2400}
+            height={2032}
+            fetchPriority="high"
+            className="w-full h-full object-cover"
+          />
+        </picture>
         {/* Gradient overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-transparent to-navy/60" />
       </div>
@@ -68,13 +71,13 @@ const HeroSection = () => {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <button
-              onClick={() => scrollToSelector('#contact')}
+            <a
+              href="/contact/"
               className="btn-primary flex items-center gap-2 text-base w-full sm:w-auto justify-center group"
             >
               <Calendar className="w-5 h-5 group-hover:animate-bounce" />
-              Book Online
-            </button>
+              Request Service
+            </a>
             <a
               href="tel:850-619-8613"
               className="btn-secondary flex items-center gap-2 text-base w-full sm:w-auto justify-center group"

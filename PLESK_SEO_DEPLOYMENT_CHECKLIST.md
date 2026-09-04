@@ -203,10 +203,114 @@ curl -I https://swisherplumbingllc.com/robots.txt
 
 ## 8. Do not do these
 
-- Do not re-add an SPA catch-all rewrite. The site has exactly one real route.
+- Do not re-add an SPA catch-all rewrite. Every route is a real file in `dist/`.
 - Do not add an `immutable` cache to HTML, `robots.txt`, `sitemap.xml`, or `llms.txt`.
 - Do not add `#services`-style fragments to the sitemap. They are not separate URLs.
 - Do not add `address`, `geo`, `openingHoursSpecification`, `aggregateRating`, or
   `sameAs` back into the JSON-LD until `OWNER_FACT_CHECK.md` items 2–8, 19, and 21 are answered.
 - Do not treat a passing local build as proof that live 404 handling works. Only the
   `curl` checks in step 4, run against the live server, prove that.
+
+---
+
+# Phase 1 addendum — real multi-route architecture
+
+**Branch:** `seo/phase-1-crawlable-architecture` (NOT yet merged or deployed as of 2026-09-03)
+**What changes for the server:** the site is no longer a single page. There are ten
+real routes, each a real `index.html` under `dist/`. **No `.htaccess` rewrite rules were
+added** — Apache's default directory index serves each route, and unknown URLs still fall
+through to `ErrorDocument 404`. The only `.htaccess` change is a comment update.
+
+## P1.0 What Phase 1 changes that affects the server
+
+| File | Purpose |
+| --- | --- |
+| `dist/<route>/index.html` (9 new route files) | Prerendered pages: title, H1, copy, nav, JSON-LD all present without JavaScript. |
+| `dist/index.html` | Homepage now prerendered too — its content is in the raw HTML, not injected by JS. |
+| `dist/sitemap.xml` | Now lists all ten canonical routes. |
+| `dist/llms.txt` | Lists the hub and service pages. |
+| `dist/.htaccess` | Comment update only; rules unchanged. |
+| `dist/images/*-640.webp`, `*-2560.*`, `og-image.jpg`, etc. | Optimized image variants alongside untouched originals. |
+
+## P1.1 Deploy
+
+- [ ] Review and merge the Phase 1 branch (remember: merging to `main` **is** deploying).
+- [ ] Run `npm run build` and `npm run validate:static` locally first — all checks must pass.
+- [ ] Confirm Plesk's Git pull completes and the new directories exist on the server
+      (`plumbing-services/`, `contact/`).
+
+## P1.2 Verify every route live (new curl checks in addition to the step-4 table)
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/leak-detection-repair/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/drain-cleaning/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/water-heater-services/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/fixture-upgrades/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/sewer-line-service/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services/grinder-pumps/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/contact/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/about/
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/plumbing-services
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/images/PelicanMascot-576.webp
+curl -s -o /dev/null -w '%{http_code}\n' https://swisherplumbingllc.com/images/og-image.jpg
+curl -I https://swisherplumbingllc.com/nonexistent-seo-test
+```
+
+Expected: every route returns `200 text/html` (ten routes — the About
+correction added `/about/`); `/plumbing-services` (no trailing slash)
+returns a single `301` to `/plumbing-services/`; the two image URLs return `200`;
+`/nonexistent-seo-test` still returns a real `404`.
+
+## P1.3 Content spot checks on the live pages
+
+- [ ] View source (not DevTools) on one service page and confirm the body copy, H1,
+      breadcrumb links, and JSON-LD are present in the raw HTML.
+- [ ] Confirm the page renders and behaves normally **with** JavaScript (mobile menu,
+      contact form, service-card hover on the homepage).
+- [ ] Rich Results Test: a service page should now show `Service` + `BreadcrumbList`
+      nodes; warnings about missing address/hours/price remain intentional.
+- [ ] Search Console (after §6): submit the expanded sitemap, then use URL Inspection on
+      the hub page and one service page and request indexing.
+- [ ] In Search Console **Page Indexing**, watch that the ten sitemap URLs are discovered
+      and that no soft-404s or "Page with redirect" errors appear.
+
+## P1.4 Do not do these (Phase 1 additions)
+
+- Do not add rewrite rules to "route" URLs — the files exist; Apache serves them directly.
+- Do not delete the original images referenced by nothing yet (~6.4 MB) without owner
+  sign-off; removal is a separate decision recorded in `SEO_PHASE_0_REPORT.md` §8.
+- Do not publish `/about/`, location pages, an emergency page, or a privacy policy until
+  the blockers in `PHASE_1_CONTENT_BLOCKERS.md` are resolved with owner answers.
+
+## P1.5 Corrections pass (2026-09-04) — verify after merge
+
+What changed technically (no server-configuration change; `.htaccess` untouched):
+
+- Pages are now **hydrated** (server HTML + `hydrateRoot`) instead of client-rendered
+  over an empty root. A React version mismatch or hydration error would show in the
+  browser console.
+- Debugging attributes (`code-path="..."`) must be absent from all served HTML.
+- CTA label is "Request Service" and links directly to `/contact/`; form wording now
+  names the form-delivery service (formsubmit.co).
+- Visible keyboard focus outline (aqua) on links, buttons, breadcrumbs, mobile menu,
+  and scroll-to-top; footer headings are H2; social meta carries og:image dimensions.
+
+Quick live checks in addition to P1.2:
+
+```bash
+# zero code-path attributes anywhere in served HTML
+curl -s https://swisherplumbingllc.com/ | grep -c 'code-path='
+curl -s https://swisherplumbingllc.com/plumbing-services/drain-cleaning/ | grep -c 'code-path='
+```
+
+Expected: `0` for both.
+
+- [ ] Open the homepage and one service page in a browser with DevTools console open:
+      no hydration warnings, no failed asset requests (Network tab), mobile menu
+      toggles, contact form renders, phone links present.
+- [ ] Tab through the homepage with the keyboard: every focused control shows the
+      aqua focus outline; the "Request Service" hero button is a real link
+      (status bar shows `/contact/`) and works with JavaScript disabled.
+- [ ] View source on `/contact/` and confirm the form-delivery wording; confirm no
+      "privacy policy" promise is present.
